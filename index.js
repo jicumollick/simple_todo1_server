@@ -21,16 +21,30 @@ async function run() {
   try {
     await client.connect();
 
+    const todoCollection = client.db("ToDo").collection("tasks");
+
     app.get("/", (req, res) => {
       res.send("Hello World!");
     });
 
     // adding a task in database
+
     app.post("/task", async (req, res) => {
       const data = req.body;
       console.log("From Post Api", data);
-      const result = await noteCollection.insertOne(data);
+      const result = await todoCollection.insertOne(data);
+      res.send(result);
+    });
 
+    // get all tasks from database
+
+    app.get("/tasks", async (req, res) => {
+      const q = {};
+      // console.log(q);
+
+      const cursor = todoCollection.find(q);
+      const result = await cursor.toArray();
+      console.log(result);
       res.send(result);
     });
 
