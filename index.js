@@ -1,4 +1,5 @@
 const { MongoClient, ServerApiVersion } = require("mongodb");
+var ObjectId = require("mongodb").ObjectID;
 const express = require("express");
 var cors = require("cors");
 require("dotenv").config();
@@ -25,6 +26,15 @@ async function run() {
 
     app.get("/", (req, res) => {
       res.send("Hello World!");
+    });
+
+    // delete a task from database
+
+    app.delete("/task/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const result = await todoCollection.deleteOne(filter);
+      res.send(result);
     });
 
     // adding a task in database
